@@ -1,7 +1,7 @@
 'use strict';
 
 /* Controllers */
-var taskListControllers = angular.module('taskListControllers', ['ui.bootstrap.datetimepicker']);
+var taskListControllers = angular.module('taskListControllers', ['ui.bootstrap.datetimepicker', 'ui.bootstrap']);
 
 taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $routeParams, $filter, $location, storage, Slug) {
     'use strict';
@@ -11,7 +11,7 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
 
     var defaultList = {
       listId: Slug.slugify('Work tasks' + '-' + 0),
-      title: 'Tasks to hire in Mev',
+      title: 'Tasks to be hired by Mev',
       tasks: [
         { 
           title: 'Learn HTML5', 
@@ -36,22 +36,40 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
         { 
           title: 'Write this SPA', 
           completed: false,
-          start: new Date(2016, 4, 19, 16),
-          deadLine: new Date(2016, 4, 25, 9),
-          priority: 'high'
+          startTime: new Date(2016, 4, 19, 16),
+          endTime: new Date(2016, 4, 25, 9),
+          priority: 'high',
+          progress: 80
         }
-      ]};
+      ]
+    };
+    var defaultList2 = {
+        listId: Slug.slugify('Work tasks' + '-' + 1),
+        title: 'Home tasks',
+        tasks: [
+            {
+                title: 'Buy a chocolate',
+                completed: false,
+                priority: 'high'
+            },
+            {
+                title: 'Buy a milk',
+                completed: false,
+                priority: 'medium'
+            }
+        ]
+    };
 
     $scope.newTask = {};
     $scope.newList = '';
 
-    var lists = $scope.lists = storage.get(LIST_STORAGE_ID) || [defaultList]
+    var lists = $scope.lists = storage.get(LIST_STORAGE_ID) || [defaultList, defaultList2];
 
     $scope.currentList = lists[0] || { tasks: [] };
     var tasks = $scope.tasks = $scope.currentList.tasks;
 
     $scope.$watch('tasks', function (newValue, oldValue) {
-      $scope.currentList.remainingCount = $filter('filter')(tasks, { completed: false}).length
+      $scope.currentList.remainingCount = $filter('filter')(tasks, { completed: false}).length;
       $scope.currentList.completedCount = tasks.length - $scope.currentList.remainingCount
     }, true);
 
@@ -65,7 +83,7 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
     // Monitor the current route for changes and adjust the filter accordingly.
     $scope.$on('$routeChangeSuccess', function () {
       if ($routeParams.listId) {
-        var listId = $routeParams.listId.split("-").pop()
+        var listId = $routeParams.listId.split("-").pop();
         var list = lists[listId];
 
         if (list !== undefined && list !== $scope.currentList) {
@@ -78,24 +96,24 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
     });
 
     $scope.setLocation = function() {
-      var url = '/'
+      var url = '/';
 
       if ($scope.currentList) {
         url += $scope.currentList.listId;
       }
 
       $location.path(url);
-    }
+    };
 
     $scope.setTasks = function() {
       tasks = $scope.tasks = $scope.currentList.tasks;
-    }
+    };
 
     $scope.setCurrentList = function() {
       if (!$scope.currentList && !lists) {
         $scope.currentList = lists[0];
       }
-    }
+    };
 
     $scope.addList = function() {
       var newList = $scope.newList.trim();
@@ -114,26 +132,30 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
       $scope.newList = '';
       $scope.currentList = lists[lists.length - 1];
       $scope.setTasks();
-    }
+    };
 
     $scope.removeList = function(list) {
       lists.splice(lists.indexOf(list), 1);
       $scope.currentList = lists[lists.length - 1];
       $scope.setTasks();
-    }
+    };
 
     $scope.addTask = function() {
       var newTaskName = $scope.newTask.name.trim();
-
+      var newStartTime = $scope.newTask.startTime ? $scope.newTask.startTime : new Date();
       if (!newTaskName.length) {
+        return;
+      }
+      if (!$scope.newTask.startTime) {
         return;
       }
 
       tasks.push({
         title: newTaskName,
         completed: false,
-        deadline: $scope.newTask.deadLine,
-        deadline: $scope.newTask.dueTime
+        endTime: $scope.newTask.endTime,
+        startTime: newStartTime,
+          priority: 'generic'
       });
 
       $scope.newTask = {};
@@ -141,11 +163,11 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
 
     $scope.removeTask = function(task) {
       tasks.splice(tasks.indexOf(task), 1);
-    }
+    };
     $scope.reload = function (){
       localStorage.clear(); 
       location.reload();
-    }
+    };
     $scope.now = new Date();
 
     $scope.duration = function(time1, time2){
@@ -153,7 +175,13 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
       var time2 = moment(time2);
       return moment.duration(time1.diff(time2)).asHours();
     };
+    $scope.time_spent = function (time1, time2) {
+        //var time1 = moment(time1);
+        //var time2 = moment(time2);
+        console.log( time2);
+        return time1.asSeconds()/time2.asSeconds()*100;
 
+    };
 
 
   });

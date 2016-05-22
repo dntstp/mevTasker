@@ -1,0 +1,48 @@
+.red
+  background-color: #9e2729
+.orange
+  background-color: #c4a10e
+.btn
+  border-radius: 0
+.add-task-btn
+  height: 100% !important
+  margin: -15px 0 !important
+  padding: 0 20px !important
+  line-height: 100%
+  &>span
+    display: inline-block
+    margin-top: 40%
+.settings
+  .dropdown
+    display: inline-block !important
+    width: 180px
+    a
+      display: inline-block !important
+      width: 180px
+.destroy-task
+  margin-left: 10px
+  padding-left: 10px
+.text-center
+  text-align: center
+
+[ng-drag] 
+  -moz-user-select: -moz-none
+  -khtml-user-select: none
+  -webkit-user-select: none
+  -ms-user-select: none
+  user-select: none
+
+
+[ng-drag] 
+  cursor: move
+
+[ng-drag].drag-over 
+  border: solid 1px red
+
+
+[ng-drag].dragging 
+  opacity: 0.5
+
+[ng-drop].drag-enter 
+  border: solid 3px red
+

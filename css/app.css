@@ -11,7 +11,7 @@ body {
   width: 320px;
   height: 100%;
   padding: 25px 20px;
-  background-color: #4cb8d8;
+  background-color: rgba(158, 39, 41, 0.86);
   position: fixed;
   top: 0;
   left: 0;
