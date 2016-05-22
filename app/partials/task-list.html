@@ -1,0 +1,64 @@
+<div class="task-widget">
+  <div class="task-lists">
+    <ul class="nav nav-pills nav-stacked">
+      <li ng-class="{active: currentList.title == list.title}" ng-repeat="list in lists track by $index">
+        <a data-toggle="tab" href="#{{list.listId}}">
+          <span class="badge pull-right">{{list.remainingCount}}</span>
+          <div class="destroy pull-right glyphicon glyphicon-trash" ng-click="removeList(list)"></div>
+          <strong>{{list.title}}</strong>
+        </a>
+      </li>
+    </ul>
+    <form id="list-form" ng-submit="addList()" >
+      <div class="input-group new-list">
+        <input id="new-list" placeholder="Create a new list..." ng-model="newList" autofocus class="form-control">
+        <span class="input-group-btn">
+          <div class="btn new-list" ng-click="addList()">
+            <span class="glyphicon glyphicon-plus"></span>
+          </div>
+        </span>
+      </div>
+    </form>
+    <button type="button" class="btn btn-large btn-block btn-default" ng-click="reload()">clear storage (remove in production)</button>
+  </div>
+
+  <div class="tab-content tasks">
+    <div class="tab-pane active" id="{{currentList}}">
+      <ul>
+        <li ng-class="{high:'red', medium:'orange', generic:'blue'}[task.priority]" ng-repeat="task in tasks track by $index" class="task-listing">
+          <input type="checkbox" ng-model="task.completed">
+          <label>
+            <div class="glyphicon glyphicon-ok"></div>
+          </label>
+          <span>{{task.title}}</span> 
+          <br ng-show="task.deadLine"> 
+          <span ng-show="task.deadLine" class="info"> Deadline: {{ task.deadLine | date:"MM/dd/yyyy 'at' HH:mm"}} Remaining: {{task.deadLine | amDifference : null : 'hours' }} hours</span>
+          <div class="destroy glyphicon glyphicon-trash pull-right destroy-task" ng-click="removeTask(task)"></div>
+        </li>
+      </ul>
+      
+      <form id="task-form" ng-submit="addTask()" >
+        <div class="input-group new-task">
+          <input id="new-task" placeholder="Create a new task…" ng-model="newTask.name" autofocus class="form-control">
+          <div class="dropdown" style="display: inline-block">
+            <a  class="btn btn-info dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" href="#/" ng-bind="newTask.dueTime || 'Set due time' | date:'MM/dd/yyyy HH:mm'"></a>
+            <ul class="dropdown-menu" role="menu">
+              <datetimepicker data-ng-model="newTask.deadLine" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/>
+            </ul>
+          </div>
+          <div class="dropdown" style="display: inline-block">
+            <a  class="btn btn-info dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown" href="#/" ng-bind="newTask.deadLine || 'Set deadline' | date:'MM/dd/yyyy HH:mm'"></a>
+            <ul class="dropdown-menu" role="menu">
+              <datetimepicker data-ng-model="newTask.deadLine" data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/>
+            </ul>
+          </div>
+          <span class="input-group-btn">
+            <div class="btn add-task-btn" ng-click="addTask()" type=button>
+              <span class="glyphicon glyphicon-plus"></span>
+            </div>
+          </span>
+        </div>
+      </form>
+    </div>
+  </div><!-- tab-content -->
+</div><!-- task-widget -->
