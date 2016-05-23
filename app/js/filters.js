@@ -4,17 +4,21 @@
 
 taskListControllers.filter('priorityFilter', function() {
 	return function(input) {
-		var res = 'generic'
+		var res = 'generic';
 		switch (input) {
 			case 1: 
-			res = 'important'
+				res = 'important';
+				break;
 			case 2: 
-			res = 'medium'
+				res = 'medium';
+				break;
 			case 3: 
-			res = 'generic'
+				res = 'generic';
+				break;
 			default:
-			res = input
+				res = input;
+				break;
 		}
-		return res
+		return res;
 	}
 });
