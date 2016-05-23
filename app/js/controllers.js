@@ -16,29 +16,29 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
         { 
           title: 'Learn HTML5', 
           completed: true,
-          priority: 'high'
+          priority: 1
         },
         { 
           title: 'Learh JS',
            completed: true,
-           priority: 'medium' 
+           priority: 2
          },
         { 
           title: 'Learn CSS3',
           completed: true,
-          priority: 'high'
+          priority: 1
         },
         { 
           title: 'Become an Angular Master', 
           completed: true,
-          priority: 'generic'
+          priority: 3
         },
         { 
           title: 'Write this SPA', 
           completed: false,
           startTime: new Date(2016, 4, 19, 16),
           endTime: new Date(2016, 4, 25, 9),
-          priority: 'high',
+          priority: 1,
           progress: 80
         }
       ]
@@ -172,14 +172,13 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
     $scope.now = new Date();
 
     $scope.duration = function(time1, time2){
-      var time1 = moment(time1);
-      var time2 = moment(time2);
+      // var time1 = moment(time1);
+      // var time2 = moment(time2);
       return moment.duration(time1.diff(time2)).asHours();
     };
     $scope.time_spent = function (time1, time2) {
-        //var time1 = moment(time1);
-        //var time2 = moment(time2);
-        console.log( time2);
+        // var time1 = moment(time1);
+        // var time2 = moment(time2);
         return time1.asSeconds()/time2.asSeconds()*100;
 
     };
