@@ -143,6 +143,7 @@ taskListControllers.controller('TaskListCtrl', function TaskListCtrl($scope, $ro
     $scope.addTask = function() {
       var newTaskName = $scope.newTask.name.trim();
       var newStartTime = $scope.newTask.startTime ? $scope.newTask.startTime : new Date();
+      var newStartTime = $scope.newTask.priority ? $scope.newTask.priority : 'generic';
       if (!newTaskName.length) {
         return;
       }

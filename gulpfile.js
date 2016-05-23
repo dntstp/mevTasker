@@ -18,12 +18,13 @@ gulp.task('browser-sync', ['styles', 'scripts'], function() {
 
 gulp.task('styles', function () {
 	return gulp.src(
-		['sass/*.sass', 
-		'css/*.css',
+		[
 		'libs/bootstrap/dist/css/bootstrap.css',
 		'libs/animate.css/animate.min.css',
 		'libs/font-awesome/css/font-awesome.min.css',
-		'libs/angular-bootstrap-datetimepicker/src/css/datetimepicker.css'
+		'libs/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
+		'css/*.css',
+		'sass/*.sass'
 
 		])
 	.pipe(sass({

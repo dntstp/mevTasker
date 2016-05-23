@@ -25,82 +25,89 @@
             production)
         </button>
     </div>
-
     <div class="tab-content tasks">
-        <div class="tab-pane active" id="{{currentList}}">      
-            <ul>
-                <li ng-repeat="task in tasks track by $index" class="task-listing">
-                    <input type="checkbox" ng-model="task.completed">
-                    <label>
-                        <div class="glyphicon glyphicon-ok"></div>
-                    </label>
-                    <span>{{task.title}}</span>
-
-                    <div class="destroy glyphicon glyphicon-trash pull-right destroy-task"
-                         ng-click="removeTask(task)"></div>
-                </li>
-            </ul>
-        </div>
-        <uib-accordion close-others="true" class="tab-content tasks" >
-            <uib-accordion-group
-                    ng-repeat="task in tasks track by $index"
-                    panel-class="{{{high:'panel-danger', medium:'panel-warning', generic:'panel-info'}[task.priority]}}"
-                    is-open="task.open">
-                <uib-accordion-heading ng-click="task.open = !task.open">
-                    <input type='checkbox' ng-model='task.completed' > {{task.title}}
-                    <br ng-show="task.endTime">
-                    <span ng-show="task.endTime" class="info"> Remaining: {{task.endTime | amDifference : null : 'seconds'| amDurationFormat : 'second' }}</span>
-
-                    <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': task.open, 'glyphicon-chevron-right': !task.open}"></i>
-                    <div class="destroy glyphicon glyphicon-trash pull-right destroy-task"
-                         ng-click="removeTask(task)"></div>
-                </uib-accordion-heading>
-                <uib-accordion-content>
-                    <span am-time-ago="now"></span>
-                    Start: {{ task.startTime | date:"MM/dd/yyyy 'at' HH:mm"}} <br>
-                    End: {{ task.endTime | date:"MM/dd/yyyy 'at' HH:mm"}} <br>
-                    Left: {{now | amDifference : task.startTime : 'seconds' | amDurationFormat : 'second' }}<br>
-                    Remaining: {{task.endTime | amDifference : null : 'seconds'| amDurationFormat : 'second' }}<br>
-                    All: {{task.endTime | amDifference : task.startTime : 'seconds' | amDurationFormat : 'second'  }}<br>
-                    <uib-progressbar max="100" value="task.progress" class="progress-striped active" type="success">
-                        <span style="color:white; white-space:nowrap;">{{task.progress}} %</span>
-                    </uib-progressbar>
-                    <div class="text-center" ng-hide="task.subtasks">
-                        <span class="info">No tasks yet</span>
+        <div class="tab-pane active" id="{{currentList}}">
+            <form id="task-form" ng-submit="addTask()">
+                <div class="input-group new-task">
+                    <div class="input-container">
+                        <input id="new-task" placeholder="Create a new task…" ng-model="newTask.name" autofocus  class="form-control">
                     </div>
-                </uib-accordion-content>
-            </uib-accordion-group>
-        </uib-accordion>
-        <hr />
-        <form id="task-form" ng-submit="addTask()">
-            <div class="input-group new-task">
-                <input id="new-task" placeholder="Create a new task…" ng-model="newTask.name" autofocus
-                       class="form-control">
-                <div class="settings">
-                    <div class="dropdown form-control" style="display: inline-block">
-                        <a class="btn btn-info dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown"
-                           href="#/" ng-bind="newTask.startTime || 'Set start time' | date:'MM/dd/yyyy HH:mm'"></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <datetimepicker data-ng-model="newTask.startTime"
-                                            data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/>
+                    
+                    <div class="settings">
+                      <div class="col-sm-3 dropdown form-control btn-group" uib-dropdown>
+                        <a type="button" class="btn btn-info" uib-dropdown-toggle>
+                          {{newTask.priority || 'Select priority'}} <span class="caret"></span>
+                        </a>
+                        <ul class="dropdown-menu" uib-dropdown-menu role="menu">
+                          <li role="menuitem" ng-click='newTask.priority="important"'>important</li>
+                          <li role="menuitem" ng-click='newTask.priority="medium"'>medium</li>
+                          <li role="menuitem" ng-click='newTask.priority="generic"'>generic</li>
                         </ul>
-                    </div>
-                    <div class="dropdown form-control" style="display: inline-block">
-                        <a class="btn btn-info dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown"
-                           href="#/" ng-bind="newTask.endTime || 'Set end time' | date:'MM/dd/yyyy HH:mm'"></a>
-                        <ul class="dropdown-menu" role="menu">
-                            <datetimepicker data-ng-model="newTask.endTime"
-                                            data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
-                        </ul>
-                    </div>
+                      </div>
+                        <div class="col-sm-3 dropdown form-control">
+                            <a class="btn btn-info dropdown-toggle" id="dropdown1" role="button" data-toggle="dropdown"
+                               href="#/">{{newTask.startTime || 'Set start time' | date:'MM/dd/yyyy HH:mm'}} <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <datetimepicker data-ng-model="newTask.startTime"
+                                                data-datetimepicker-config="{ dropdownSelector: '#dropdown1' }"/>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3 dropdown form-control">
+                            <a class="btn btn-info dropdown-toggle" id="dropdown2" role="button" data-toggle="dropdown" href="#/">{{newTask.endTime || 'Set end time' | date:'MM/dd/yyyy HH:mm'}} <span class="caret"></span></a>
+                            <ul class="dropdown-menu" role="menu">
+                                <datetimepicker data-ng-model="newTask.endTime"
+                                                data-datetimepicker-config="{ dropdownSelector: '#dropdown2' }"/>
+                            </ul>
+                        </div>
+                        <div class="col-sm-3 dropdown form-control">
+                            <a class="btn btn-success" ng-click="addTask()"><i class="glyphicon glyphicon-plus"></i> Add task
+                            </a>
+                        </div>
+                    </div>    
+                </div>
+            </form> 
+                <div class="panel-top">
+
+                <div class="btn-group pull-right">
+
+                    <label class="btn btn-primary" ng-model="radioModel" uib-btn-radio="'-priority'">Time left</label>
+                    <label class="btn btn-primary" ng-model="radioModel" ng-model="radioModel" uib-btn-radio="'endTime'">Time left</label>
+                    <label class="btn btn-primary" ng-model="radioModel" ng-model="radioModel" uib-btn-radio="''">Defaultt</label>
+                
                 </div>
 
-          <span class="input-group-btn">
-            <div class="btn add-task-btn" ng-click="addTask()" type=button>
-              <span class="glyphicon glyphicon-plus"></span>
+                <span class="pull-right">Order by:</span>    
             </div>
-          </span>
-            </div>
-        </form>
-    </div><!-- tab-content -->
-</div><!-- task-widget -->
+            
+            <uib-accordion close-others="true" class="tab-content" >
+                <uib-accordion-group class=""
+                        ng-repeat="task in tasks | orderBy: radioModel track  by $index"
+                        panel-class="{{{high:'panel-danger', medium:'panel-warning', generic:'panel-info'}[task.priority]}}"
+                        is-open="task.open">
+                    <uib-accordion-heading ng-click="task.open = !task.open">
+                        <input type='checkbox' ng-model='task.completed' > {{task.title}}
+                        <br ng-show="task.endTime">
+                        <span ng-show="task.endTime" class="info"> Remaining: {{task.endTime | amDifference : null : 'seconds'| amDurationFormat : 'second' }}</span>
+
+                        <i class="pull-right glyphicon" ng-class="{'glyphicon-chevron-down': task.open, 'glyphicon-chevron-right': !task.open}"></i>
+                        <div class="destroy glyphicon glyphicon-trash pull-right destroy-task"
+                             ng-click="removeTask(task)"></div>
+                    </uib-accordion-heading>
+                    <uib-accordion-content>
+                        Start: <span class="info">{{ task.startTime || 'Not available' | date:"MM/dd/yyyy 'at' HH:mm" }}</span> <br>
+                        End: <span class="info">{{ task.endTime || 'Not available' | date:"MM/dd/yyyy 'at' HH:mm" || 'Not set'}}</span>  <br>
+                        Left: <span class="info">{{now || 'Not available' | amDifference : task.startTime : 'seconds' | amDurationFormat : 'second' }}</span>  <br>
+                        Remaining: <span class="info">{{task.endTime | amDifference : null : 'seconds'| amDurationFormat : 'second' }} </span> <br>
+                        All: <span class="info">{{task.endTime | amDifference : task.startTime : 'seconds' | amDurationFormat : 'second'  }} </span> <br>
+                        <uib-progressbar max="100" value="task.progress" class="progress-striped active" type="success">
+                            <span style="color:white; white-space:nowrap;">{{task.progress}} %</span>
+                        </uib-progressbar>
+                        <div class="text-center" ng-hide="task.subtasks">
+                            <span class="info">No tasks yet</span>
+                        </div>
+                    </uib-accordion-content>
+                </uib-accordion-group>
+            </uib-accordion>
+        </div>
+    </div>
+</div>
