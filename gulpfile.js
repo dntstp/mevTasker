@@ -23,6 +23,7 @@ gulp.task('styles', function () {
 		'libs/animate.css/animate.min.css',
 		'libs/font-awesome/css/font-awesome.min.css',
 		'libs/angular-bootstrap-datetimepicker/src/css/datetimepicker.css',
+		'libs/angularjs-slider/dist/rzslider.min.css',
 		'css/*.css',
 		'sass/*.sass'
 
@@ -55,7 +56,8 @@ gulp.task('scripts', function() {
 		'libs/angular-moment/angular-moment.js',
 		'libs/angular-bootstrap-datetimepicker/src/js/datetimepicker.js',
 		'libs/angular-bootstrap-datetimepicker/src/js/datetimepicker.templates.js',
-		'libs/ngDraggable/ngDraggable.js'
+		'libs/ngDraggable/ngDraggable.js',
+		'libs/angularjs-slider/dist/rzslider.min.js'
 
 		])
 		.pipe(concat('libs.js'))
